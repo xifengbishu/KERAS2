@@ -11,20 +11,47 @@ from __future__ import absolute_import
 from __future__ import print_function
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.core import Dense, Dropout, Activation, Flatten, TimeDistributedDense, RepeatVector
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.optimizers import SGD, Adadelta, Adagrad, RMSprop
 from keras.utils import np_utils, generic_utils
+from keras.layers.embeddings import Embedding
+from keras.layers import LSTM, GRU, SimpleRNN
+from keras.layers import Merge
 from six.moves import range
 from data import load_data
 import random
+import numpy as np
 
 
 batch_size = 100
-nb_epoch = 50
+nb_epoch = 3
+
+nb_samples = 200
+nb_channels = 3
+width = 100
+height = 100
+
 max_caption_len = 16
-vocab_size = 10000
+vocab_size = 1000
+
+# "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
+# "captions" is a numpy integer array of shape (nb_samples, max_caption_len)
+# containing word index sequences representing partial captions.
+# "next_words" is a numpy float array of shape (nb_samples, vocab_size)
+# containing a categorical encoding (0s and 1s) of the next word in the corresponding
+# partial caption.
+
+images = np.random.random((nb_samples,nb_channels,width,height))
+captions = np.random.randint (10,size=(nb_samples,max_caption_len))
+next_words = np.random.random ((nb_samples,vocab_size))
+print ( 'captions',captions[1] )
+print ( 'images.shape',images.shape)
+print ( 'captions.shape',captions.shape)
+print ( 'next_words.shape',next_words.shape)
+
+#exit()
 
 
 #加载数据
@@ -80,7 +107,7 @@ image_model.add(Flatten())
 image_model.add(Dense(128))
 
 # let's load the weights from a save file.
-image_model.load_weights('weight_file.h5')
+#image_model.load_weights('weight_file.h5')
 
 # next, let's define a RNN model that encodes sequences of words
 # into sequences of 128-dimensional word vectors.
@@ -95,6 +122,7 @@ image_model.add(RepeatVector(max_caption_len))
 # the output of both models will be tensors of shape (samples, max_caption_len, 128).
 # let's concatenate these 2 vector sequences.
 model = Sequential()
+#model.add(Merge([cnn_model, language_model], mode='concat', concat_axis=-1))
 model.add(Merge([image_model, language_model], mode='concat', concat_axis=-1))
 # let's encode this vector sequence into a single vector
 model.add(GRU(256, return_sequences=False))
@@ -107,13 +135,13 @@ sgd = SGD(lr=0.05, decay=1e-6, momentum=0.9, nesterov=True)
 rmspro = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08)
 model.compile(loss='mean_squared_error', optimizer=rmspro)
 
-model.fit(data, label, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
-model.fit([images, partial_captions], next_words, batch_size=16, nb_epoch=100)
+#model.fit(data, label, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
+model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch)
 
-print('Predicting')
-predicted_output = model.predict(data[1:5], batch_size=batch_size)
-print ( 'label',label[1:5] )
-print('predicted_lable',predicted_output)
+#print('Predicting')
+#predicted_output = model.predict(data[1:5], batch_size=batch_size)
+#print ( 'label',label[1:5] )
+#print('predicted_lable',predicted_output)
 
 # "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
 # "captions" is a numpy integer array of shape (nb_samples, max_caption_len)
