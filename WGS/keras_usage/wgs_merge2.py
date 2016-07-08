@@ -23,18 +23,19 @@ from six.moves import range
 from data import load_data
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-batch_size = 100
-nb_epoch = 3
+batch_size = 6
+nb_epoch = 10
 
-nb_samples = 200
+nb_samples = 600
 nb_channels = 3
 width = 100
 height = 100
 
 max_caption_len = 16
-vocab_size = 1000
+vocab_size = 12
 
 # "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
 # "captions" is a numpy integer array of shape (nb_samples, max_caption_len)
@@ -46,6 +47,12 @@ vocab_size = 1000
 images = np.random.random((nb_samples,nb_channels,width,height))
 captions = np.random.randint (10,size=(nb_samples,max_caption_len))
 next_words = np.random.random ((nb_samples,vocab_size))
+
+p_nb_samples = 5
+p_images = np.random.random((p_nb_samples,nb_channels,width,height))
+p_captions = np.random.randint (10,size=(p_nb_samples,max_caption_len))
+p_next_words = np.random.random ((p_nb_samples,vocab_size))
+
 print ( 'captions',captions[1] )
 print ( 'images.shape',images.shape)
 print ( 'captions.shape',captions.shape)
@@ -136,16 +143,25 @@ rmspro = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08)
 model.compile(loss='mean_squared_error', optimizer=rmspro)
 
 #model.fit(data, label, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
-model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch)
+model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
 
-#print('Predicting')
-#predicted_output = model.predict(data[1:5], batch_size=batch_size)
-#print ( 'label',label[1:5] )
-#print('predicted_lable',predicted_output)
+print('Predicting')
+predicted_output = model.predict([images[1:5],p_captions[1:5]],batch_size=batch_size)
+print ( 'label',next_words[1:5] )
+print('predicted_lable',predicted_output)
 
-# "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
-# "captions" is a numpy integer array of shape (nb_samples, max_caption_len)
-# containing word index sequences representing partial captions.
-# "next_words" is a numpy float array of shape (nb_samples, vocab_size)
-# containing a categorical encoding (0s and 1s) of the next word in the corresponding
-# partial caption.
+print('Plotting Results')
+plt.subplot(2, 2, 1)
+plt.plot(next_words[1])
+plt.title('Expected1')
+plt.subplot(2, 2, 2)
+plt.plot(predicted_output[1])
+plt.title('Predicted1')
+plt.subplot(2, 2, 3)
+plt.plot(next_words[2])
+plt.title('Expected1')
+plt.subplot(2, 2, 4)
+plt.plot(predicted_output[2])
+plt.title('Predicted1')
+#plt.show()
+plt.savefig('merge2.jpg', dpi = 600)
