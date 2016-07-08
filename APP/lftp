@@ -1,0 +1,1 @@
+pget -n 100 http://repo.continuum.io/archive/Anaconda2-4.1.0-Linux-x86_64.sh
