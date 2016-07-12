@@ -1,0 +1,9 @@
+imput data ( uv, tmp ,slp, flow?, sst? )is Bohai Sea , 100*100
+          39,
+          119.5
+  27 51
+  107.5 131.5
+test data is AVE Bohai Sea 
+          LAT set to 37 41
+          LON set to 117 122
+
