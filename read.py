@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np  
   
 #matlab文件名  
-matfn='alldata.mat'  
+matfn='/public/wind_flow/flow/alldata.mat'  
 mat=sio.loadmat(matfn)  
 #print type(mat)
 #print mat
@@ -25,9 +25,11 @@ lon=mat['lon']
 lat=mat['lat']
 time=mat['time']
 print ( sst.shape )
-
+print ( 'lon', lon)
+print ( 'lat', lat)
+exit()
 data = np.empty((5,100,100,420),dtype="float32")
-#data = np.empty((420,5,100,100),dtype="float32")
+#ww = np.empty((420,5,100,100),dtype="float32")
 data[0,:,:,:] = sst
 data[1,:,:,:] = t2m
 data[2,:,:,:] = msl
@@ -35,6 +37,9 @@ data[3,:,:,:] = u10
 data[4,:,:,:] = v10
 print data[1]
 print ( data.shape )
+
+ww = data.reshape((5,100,100,420))
+
 #print type(sst)
 #print type(data)
 plt.close('all') 
@@ -43,11 +48,13 @@ plt.close('all')
 #yi=data['yi']  
 #ui=data['ui']  
 #vi=data['vi']  
-plt.figure(1)  
-plt.quiver( u10[::5,::5],v10[::5,::5] )  
+
+#plt.figure(1)  
+#plt.quiver( data[3,:,:,5],data[4,:,:,5] )  
 #plt.quiver( u10[::5,::5],v10[::5,::5],ui[::5,::5],vi[::5,::5])  
 plt.figure(2)  
-plt.contourf(sst)  
+plt.contourf(ww[0,:,:,5])  
+#plt.contourf(data[0,:,:,5])  
 plt.show()  
   
 #sio.savemat('saveddata.mat', {'xi': xi,'yi': yi,'ui': ui,'vi': vi})  
