@@ -54,11 +54,13 @@ p_captions = np.random.randint (10,size=(p_nb_samples,max_caption_len))
 p_next_words = np.random.random ((p_nb_samples,vocab_size))
 
 print ( 'captions',captions[1] )
+print ( 'images',images[1] )
+print ( 'next_words',next_words[1] )
 print ( 'images.shape',images.shape)
 print ( 'captions.shape',captions.shape)
 print ( 'next_words.shape',next_words.shape)
 
-#exit()
+exit()
 
 
 #加载数据
