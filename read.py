@@ -9,6 +9,16 @@ import pylab as pl
 import scipy.io as sio  
 import matplotlib.pyplot as plt  
 import numpy as np  
+txtfn='pick_NEW_MM_DSN_NEW_MM_59321_F.dat'
+#txtfn='DATA/hko_keras_79-11'
+yy,sstb,ssta=np.loadtxt(txtfn,unpack='true')
+print (sstb[1:10])
+print ( sstb.shape )
+#plt.plot(sstb)
+#plt.title('Predicted1')
+#plt.savefig('hko_keras_79-11.jpg')
+#pl.savefig('hko_keras_79-11.jpg', dpi = 600)
+exit()
   
 #matlab文件名  
 matfn='/public/wind_flow/flow/alldata.mat'  
