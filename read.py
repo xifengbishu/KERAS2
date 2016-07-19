@@ -9,17 +9,29 @@ import pylab as pl
 import scipy.io as sio  
 import matplotlib.pyplot as plt  
 import numpy as np  
-txtfn='pick_NEW_MM_DSN_NEW_MM_59321_F.dat'
-#txtfn='DATA/hko_keras_79-11'
-yy,sstb,ssta=np.loadtxt(txtfn,unpack='true')
-print (sstb[1:10])
-print ( sstb.shape )
+'''
+#txtfn='pick_NEW_MM_DSN_NEW_MM_59321_F.dat'
+txtfn='DATA/hko_keras_79-11'
+sst=np.loadtxt(txtfn,unpack='true')
+print (sst[1:10])
+print ( sst.shape )
+x = np.linspace(0, 395, 396) 
+print ( x.shape )
+print ( x )
+exit()
+plt.figure(figsize=(8,4)) 
+plt.plot(x,sst,label="$sin(x)$",color="red",linewidth=2)  
+plt.xlabel("Time(s)")  
+plt.ylabel("Volt")  
+plt.title("PyPlot First Example")  
+#plt.ylim(-1.2,1.2)  
+plt.show()  
 #plt.plot(sstb)
 #plt.title('Predicted1')
 #plt.savefig('hko_keras_79-11.jpg')
 #pl.savefig('hko_keras_79-11.jpg', dpi = 600)
 exit()
-  
+'''
 #matlab文件名  
 matfn='/public/wind_flow/flow/alldata.mat'  
 mat=sio.loadmat(matfn)  
@@ -35,16 +47,32 @@ lon=mat['lon']
 lat=mat['lat']
 time=mat['time']
 print ( sst.shape )
-print ( 'lon', lon)
-print ( 'lat', lat)
-exit()
-data = np.empty((5,100,100,420),dtype="float32")
-#ww = np.empty((420,5,100,100),dtype="float32")
-data[0,:,:,:] = sst
-data[1,:,:,:] = t2m
-data[2,:,:,:] = msl
-data[3,:,:,:] = u10
-data[4,:,:,:] = v10
+#print ( 'lon', lon)
+#print ( 'lat', lat)
+#data = np.empty((5,100,100,420),dtype="float32")
+data = np.empty((420,5,100,100),dtype="float32")
+num = 420
+for i in range(num):
+	for j in range(100):
+		for k in range(100):
+			data[i,0,j,k] = sst[k,99-j,i]
+			data[i,1,j,k] = t2m[k,99-j,i]
+			data[i,2,j,k] = msl[k,99-j,i]
+			data[i,3,j,k] = u10[k,99-j,i]
+			data[i,4,j,k] = v10[k,99-j,i]
+#print data[:,0,:,:]
+plt.figure(1)  
+plt.contourf(data[1,0,:,:])  
+plt.savefig('new_sst.jpg')
+plt.figure(2)  
+plt.quiver( data[1,3,:,:],data[1,4,:,:] )  
+plt.savefig('new_uv.jpg')
+#plt.show()  
+exit()	
+#data[1,:,:,:] = t2m
+#data[2,:,:,:] = msl
+#data[3,:,:,:] = u10
+#data[4,:,:,:] = v10
 print data[1]
 print ( data.shape )
 
