@@ -34,7 +34,7 @@ nb_channels = 3
 width = 100
 height = 100
 
-max_caption_len = 16
+max_caption_len = 1
 vocab_size = 12
 
 # "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
@@ -45,7 +45,8 @@ vocab_size = 12
 # partial caption.
 
 images = np.random.random((nb_samples,nb_channels,width,height))
-captions = np.random.randint (10,size=(nb_samples,max_caption_len))
+captions = np.random.random((nb_samples,max_caption_len))
+#captions = np.random.randint (10,size=(nb_samples,max_caption_len))
 next_words = np.random.random ((nb_samples,vocab_size))
 
 p_nb_samples = 5
@@ -60,7 +61,7 @@ print ( 'images.shape',images.shape)
 print ( 'captions.shape',captions.shape)
 print ( 'next_words.shape',next_words.shape)
 
-exit()
+#exit()
 
 
 #加载数据
