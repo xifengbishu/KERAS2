@@ -68,7 +68,19 @@ def load_data():
 				#data[i,3,j,k] = u10[k,99-j,i]
 				#data[i,4,j,k] = v10[k,99-j,i]
 	return data,label,next
-
+# === 0-1 ===
+def Normalization(x):
+	return [(float(i)-min(x))/float(max(x)-min(x)) for i in x]
+x=[1,2,1,4,3,2,5,6,2,7]
+b=Normalization(x)
+images = np.random.random((100,10,10))
+print ( b )
+# === -1 - 1 ===
+def Normalization2(x):
+	return [(float(i)-np.mean(x))/(max(x)-min(x)) for i in x]
+x=[1,2,1,4,3,2,5,6,2,7]
+b=Normalization2(x)
+print ( b )
 '''
 print (sst[1:10])
 print ( sst.shape )
