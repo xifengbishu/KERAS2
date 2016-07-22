@@ -20,19 +20,26 @@ def load_data():
 	label = np.empty((42000,),dtype="uint8")
 	imgs = os.listdir("./mnist")
 	num = len(imgs)
+	#num = 1
 	for i in range(num):
 		img = Image.open("./mnist/"+imgs[i])
 		arr = np.asarray(img,dtype="float32")
 		data[i,:,:,:] = arr
 		label[i] = int(imgs[i].split('.')[0])
 	#归一化和零均值化
+	
 	scale = np.max(data)
+	print ( 'sacle',scale )
+	print ( 'data',data[100] )
 	data /= scale
+	print ( 'data',data[100] )
 	mean = np.std(data)
+	print ( 'mean',mean )
 	data -= mean
+	print ( 'data',data[100] )
 	return data,label
 
-
+data, label = load_data()
 
 
 

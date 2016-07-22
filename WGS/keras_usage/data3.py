@@ -67,6 +67,27 @@ def load_data():
 				data[i,2,j,k] = msl[k,99-j,i]
 				#data[i,3,j,k] = u10[k,99-j,i]
 				#data[i,4,j,k] = v10[k,99-j,i]
+
+	#归一化和零均值化
+	
+	scale = np.max(data)
+	print ( 'sacle',scale )
+	print ( 'data',data[100] )
+	data /= scale
+	print ( 'data',data[100] )
+	mean = np.std(data)
+	print ( 'mean',mean )
+	data -= mean
+	print ( 'data',data[100] )
+	return data,label
+
+data, label = load_data()
+
+
+
+
+
+
 	return data,label,next
 # === 0-1 ===
 def Normalization(x):

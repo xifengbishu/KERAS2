@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 #images, captions, next_words = load_data()
 
 nb_samples = 384
-nb_channels = 3
+nb_channels = 5
 width = 100
 height = 100
 
@@ -49,7 +49,13 @@ nb_epoch = 10
 images = np.random.random((nb_samples,nb_channels,width,height))
 captions = np.random.random((nb_samples,max_caption_len))
 next_words = np.random.random ((nb_samples,vocab_size))
-
+'''
+print('Pad sequences (samples x time)')
+X_train = sequence.pad_sequences(X_train, maxlen=maxlen)
+X_test = sequence.pad_sequences(X_test, maxlen=maxlen)
+print('X_train shape:', X_train.shape)
+print('X_test shape:', X_test.shape)
+'''
 #print ( 'captions',captions[1] )
 #print ( 'images',images[1] )
 #print ( 'next_words',next_words[1] )
