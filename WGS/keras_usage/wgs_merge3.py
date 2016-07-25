@@ -11,6 +11,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
+from keras.layers import TimeDistributed
 from keras.layers.core import Dense, Dropout, Activation, Flatten, TimeDistributedDense, RepeatVector
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
@@ -26,7 +27,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-#images, captions, next_words = load_data()
+images, captions, next_words = load_data()
 
 nb_samples = 384
 nb_channels = 5
@@ -46,9 +47,9 @@ nb_epoch = 10
 # containing a categorical encoding (0s and 1s) of the next word in the corresponding
 # partial caption.
 
-images = np.random.random((nb_samples,nb_channels,width,height))
-captions = np.random.random((nb_samples,max_caption_len))
-next_words = np.random.random ((nb_samples,vocab_size))
+#images = np.random.random((nb_samples,nb_channels,width,height))
+#captions = np.random.random((nb_samples,max_caption_len))
+#next_words = np.random.random ((nb_samples,vocab_size))
 '''
 print('Pad sequences (samples x time)')
 X_train = sequence.pad_sequences(X_train, maxlen=maxlen)
@@ -56,9 +57,9 @@ X_test = sequence.pad_sequences(X_test, maxlen=maxlen)
 print('X_train shape:', X_train.shape)
 print('X_test shape:', X_test.shape)
 '''
-#print ( 'captions',captions[1] )
-#print ( 'images',images[1] )
-#print ( 'next_words',next_words[1] )
+print ( 'captions',captions[1] )
+print ( 'images',images[1] )
+print ( 'next_words',next_words[1] )
 print ( 'images.shape',images.shape)
 print ( 'captions.shape',captions.shape)
 print ( 'next_words.shape',next_words.shape)
@@ -113,7 +114,8 @@ image_model.add(Dense(128))
 language_model = Sequential()
 language_model.add(Embedding(vocab_size, 256, input_length=max_caption_len))
 language_model.add(GRU(output_dim=128, return_sequences=True))
-language_model.add(TimeDistributedDense(128))
+language_model.add(TimeDistributed(Dense(128)))
+#language_model.add(TimeDistributedDense(128))
 
 # let's repeat the image vector to turn it into a sequence.
 image_model.add(RepeatVector(max_caption_len))
@@ -138,10 +140,9 @@ model.compile(loss='mean_squared_error', optimizer=rmspro)
 model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
 
 print('Predicting')
-predicted_output = model.predict([images[1:5],p_captions[1:5]],batch_size=batch_size)
+predicted_output = model.predict([images[1:5],captions[1:5]],batch_size=batch_size)
 print ( 'label',next_words[1:5] )
 print('predicted_lable',predicted_output)
-exit()
 print('Plotting Results')
 plt.subplot(2, 2, 1)
 plt.plot(next_words[1])
@@ -150,7 +151,7 @@ plt.subplot(2, 2, 2)
 plt.plot(predicted_output[1])
 plt.title('Predicted1')
 plt.subplot(2, 2, 3)
-plt.plot(next_words[2])
+plt.plot(,next_words[2])
 plt.title('Expected1')
 plt.subplot(2, 2, 4)
 plt.plot(predicted_output[2])

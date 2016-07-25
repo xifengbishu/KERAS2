@@ -15,7 +15,7 @@ import numpy as np
 
 def load_data():
 	nb_samples = 384
-	nb_channels = 3
+	nb_channels = 5
 	width = 100
 	height = 100
 
@@ -45,7 +45,7 @@ def load_data():
 	mat=sio.loadmat(matfn)  
 	#print type(mat)
 	#print mat
-	sst=mat['sst']
+	sst1=mat['sst']
 	t2m=mat['t2m']
 	msl=mat['msl']
 	u10=mat['u10']
@@ -54,6 +54,10 @@ def load_data():
 	lon=mat['lon']
 	lat=mat['lat']
 	time=mat['time']
+        sst=np.nan_to_num(sst1)
+	#print (sst1[1:100])
+	#print (sst[1:100])
+	#exit()
 	print ( sst.shape )
 	#print ( 'lon', lon)
 	#print ( 'lat', lat)
@@ -62,33 +66,41 @@ def load_data():
 	for i in range(nb_samples):
 		for j in range(width):
 			for k in range(height):
-				data[i,0,j,k] = sst[k,99-j,i]
+				data[i,0,j,k] = sst[k,99-j,i]+0.0
 				data[i,1,j,k] = t2m[k,99-j,i]
 				data[i,2,j,k] = msl[k,99-j,i]
-				#data[i,3,j,k] = u10[k,99-j,i]
-				#data[i,4,j,k] = v10[k,99-j,i]
-
-	#归一化和零均值化
+				data[i,3,j,k] = u10[k,99-j,i]
+				data[i,4,j,k] = v10[k,99-j,i]
+	#print 'origtion'
+	#print (data[1:5,:,50,50])
+	for i in range(nb_channels):
+		sacle = np.max(data[:,i,:,:])
+		data[:,i,:,:] /= sacle
+		mean = np.std(data[:,i,:,:])
+		data[:,i,:,:] -= mean
+		#print ('sacle',sacle,'mean',mean)
 	
-	scale = np.max(data)
-	print ( 'sacle',scale )
-	print ( 'data',data[100] )
-	data /= scale
-	print ( 'data',data[100] )
-	mean = np.std(data)
-	print ( 'mean',mean )
-	data -= mean
-	print ( 'data',data[100] )
-	return data,label
+	#print 'nomalization'
+	#print (data[1:5,:,50,50])
+	#print (data[:,0,:,:])
+	sacle = np.max(label)
+	label /= sacle
+	mean = np.std(label)
+	label -= mean
 
-data, label = load_data()
-
-
-
-
+	sacle = np.max(next)
+	next /= sacle
+	mean = np.std(next)
+	next -= mean
 
 
 	return data,label,next
+
+
+#data, labeli, next = load_data()
+
+
+'''
 # === 0-1 ===
 def Normalization(x):
 	return [(float(i)-min(x))/float(max(x)-min(x)) for i in x]
@@ -102,6 +114,21 @@ def Normalization2(x):
 x=[1,2,1,4,3,2,5,6,2,7]
 b=Normalization2(x)
 print ( b )
+
+	#归一化和零均值化
+	
+	scale = np.max(data)
+	print ( 'sacle',scale )
+	print ( 'data',data[100] )
+	data /= scale
+	print ( 'data',data[100] )
+	mean = np.std(data)
+	print ( 'mean',mean )
+	data -= mean
+	print ( 'data',data[100] )
+
+'''
+
 '''
 print (sst[1:10])
 print ( sst.shape )
