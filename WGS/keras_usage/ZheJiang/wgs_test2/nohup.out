@@ -1,0 +1,63 @@
+Using Theano backend.
+Loading data...
+int8
+int8
+[[  88   64  -75 ...,    0 -128  -77]
+ [  33   14    0 ...,    0    0    0]
+ [   0    0    0 ...,    0    0    0]
+ ..., 
+ [   0    0    0 ...,    0    0    0]
+ [   0    0    0 ...,    0    0    0]
+ [   0    0    0 ...,    0    0    0]]
+[  40   60  -75   36   61    0    0    0  112   31  -78   14    0    0    0
+    0   96   12   94  -10  -86   42    0    0  -56   12   94  -10  -86   42
+    0    0  112  -15   11  -51   30   43    0    0   64  -66   92  -10  -86
+   42    0    0  112  -15   11  -51   30   43    0    0  112  101   94  -10
+  -86   42    0    0   72   46   94  -10  -86   42    0    0   48   26   94
+  -10  -86   42    0    0  112  -15   11  -51   30   43    0    0   16  -33
+   93  -10  -86   42    0    0 -128   26   94  -10  -86   42    0    0  112
+  -66   92  -10  -86   42    0    0  -48   26   94  -10  -86   42    0    0
+  104  110   93  -10  -86   42    0    0  -96  -66   92  -10  -86   42    0
+    0  -96   46   94  -10  -86   42    0    0  112  -15   11  -51   30   43
+    0    0   32   27   94  -10  -86   42    0    0   48   89   94  -10  -86
+   42    0    0  112   27   94  -10  -86   42    0    0  -48  101   94  -10
+  -86   42    0    0   -8   46   94  -10  -86   42    0    0   48  102   94
+  -10  -86   42    0    0   49    0    0    0    0    0    0    0   56   58
+  -75   36   61    0    0    0  112  -79 -102   14    0    0    0    0  111
+   47  116  101  110  115  111  114   47  110  110  101  116   47  115  105]
+X_train shape: (240, 10)
+y_train shape: (240,)
+Build model...
+Train...
+(240, 10)
+(240,)
+Train on 240 samples, validate on 240 samples
+Epoch 1/15
+Traceback (most recent call last):
+  File "wgs_lstm.py", line 65, in <module>
+    validation_data=(X_test, y_test))
+  File "/usr/local/lib/python2.7/site-packages/Keras-1.0.2-py2.7.egg/keras/models.py", line 405, in fit
+    sample_weight=sample_weight)
+  File "/usr/local/lib/python2.7/site-packages/Keras-1.0.2-py2.7.egg/keras/engine/training.py", line 1051, in fit
+    callback_metrics=callback_metrics)
+  File "/usr/local/lib/python2.7/site-packages/Keras-1.0.2-py2.7.egg/keras/engine/training.py", line 789, in _fit_loop
+    outs = f(ins_batch)
+  File "/usr/local/lib/python2.7/site-packages/Keras-1.0.2-py2.7.egg/keras/backend/theano_backend.py", line 507, in __call__
+    return self.function(*inputs)
+  File "/usr/local/lib/python2.7/site-packages/Theano-0.9.0.dev0-py2.7.egg/theano/compile/function_module.py", line 908, in __call__
+    storage_map=getattr(self.fn, 'storage_map', None))
+  File "/usr/local/lib/python2.7/site-packages/Theano-0.9.0.dev0-py2.7.egg/theano/gof/link.py", line 314, in raise_with_op
+    reraise(exc_type, exc_value, exc_trace)
+  File "/usr/local/lib/python2.7/site-packages/Theano-0.9.0.dev0-py2.7.egg/theano/compile/function_module.py", line 895, in __call__
+    self.fn() if output_subset is None else\
+ValueError: Input dimension mis-match. (input[1].shape[1] = 10, input[2].shape[1] = 80)
+Apply node that caused the error: Elemwise{Composite{Switch(i0, (i1 * i2), i1)}}(InplaceDimShuffle{x,x,x}.0, Reshape{3}.0, Reshape{3}.0)
+Toposort index: 165
+Inputs types: [TensorType(uint8, (True, True, True)), TensorType(float32, 3D), TensorType(float32, 3D)]
+Inputs shapes: [(1, 1, 1), (32, 10, 128), (32, 80, 128)]
+Inputs strides: [(1, 1, 1), (5120, 512, 4), (40960, 512, 4)]
+Inputs values: [array([[[1]]], dtype=uint8), 'not shown', 'not shown']
+Outputs clients: [[Reshape{2}(Elemwise{Composite{Switch(i0, (i1 * i2), i1)}}.0, TensorConstant{[ -1 128]})]]
+
+HINT: Re-running with most Theano optimization disabled could give you a back-trace of when this node was created. This can be done with by setting the Theano flag 'optimizer=fast_compile'. If that does not work, Theano optimizations can be disabled with 'optimizer=None'.
+HINT: Use the Theano flag 'exception_verbosity=high' for a debugprint and storage map footprint of this apply node.
