@@ -29,8 +29,8 @@ def load_data():
 	label = np.empty((nb_samples,max_caption_len),dtype="float32")
 	for i in range(nb_samples):
        		label[i] = hko[i] 
-	#print ( label[1:10])
-	#print ( label.shape )
+	print ( label[1:10])
+	print ( label.shape )
 	# --- next ---
 	next = np.empty((nb_samples,vocab_size),dtype="float32")
 	for i in range(nb_samples):
@@ -41,6 +41,7 @@ def load_data():
 	#print ( next[1:10])
 	#print ( next.shape )
 	# --- input cnn --- read matlab dat   
+	# --- ERA 1979-2015? 
 	matfn='alldata.mat'  
 	mat=sio.loadmat(matfn)  
 	#print type(mat)
@@ -57,8 +58,9 @@ def load_data():
         sst=np.nan_to_num(sst1)
 	#print (sst1[1:100])
 	#print (sst[1:100])
-	#exit()
 	print ( sst.shape )
+	exit()
+
 	#print ( 'lon', lon)
 	#print ( 'lat', lat)
 	#data = np.empty((5,100,100,420),dtype="float32")
@@ -97,7 +99,7 @@ def load_data():
 	return data,label,next
 
 
-#data, labeli, next = load_data()
+data, labeli, next = load_data()
 
 
 '''
