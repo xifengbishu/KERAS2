@@ -14,7 +14,9 @@ import numpy as np
 
 
 def load_data():
-	nb_samples = 384
+	
+	nb_samples = 360
+	nb_pre = 24
 	nb_channels = 5
 	width = 100
 	height = 100
@@ -26,17 +28,34 @@ def load_data():
 	txtfn='hko_keras_79-11'
 	hko=np.loadtxt(txtfn,unpack='true')
 
-	label = np.empty((nb_samples,max_caption_len),dtype="float32")
+	#label_all = np.empty((nb_samples,max_caption_len),dtype="float32")
+	label_tra = np.empty((nb_samples,max_caption_len),dtype="float32")
+	label_pre = np.empty((nb_pre,max_caption_len),dtype="float32")
+
 	for i in range(nb_samples):
-       		label[i] = hko[i] 
-	print ( label[1:10])
-	print ( label.shape )
+       		label_tra[i] = hko[i] 
+	for i in range(nb_pre):
+       		label_pre[i] = hko[nb_samples+i]
+ 	'''
+	print ( label_tra[1:10])
+	print ( hko[1:10])
+	print ( label_pre[1:10])
+	print ( hko[nb_samples+1:nb_samples+10])
+	print ( label_tra.shape )
+	print ( label_pre)
+	'''
+	#exit()
 	# --- next ---
-	next = np.empty((nb_samples,vocab_size),dtype="float32")
+	next_tra = np.empty((nb_samples,vocab_size),dtype="float32")
+	next_pre = np.empty((nb_pre,vocab_size),dtype="float32")
 	for i in range(nb_samples):
 		for j in range(vocab_size):
-			k = i+j
-			next[i,j] = hko[i+j]
+			#k = i+j
+			next_tra[i,j] = hko[i+j]
+	for i in range(nb_pre):
+		for j in range(vocab_size):
+			#k = i+j
+			next_pre[i,j] = hko[i+j+nb_samples]
 
 	#print ( next[1:10])
 	#print ( next.shape )
@@ -59,47 +78,62 @@ def load_data():
 	#print (sst1[1:100])
 	#print (sst[1:100])
 	print ( sst.shape )
-	exit()
+	#exit()
 
 	#print ( 'lon', lon)
 	#print ( 'lat', lat)
 	#data = np.empty((5,100,100,420),dtype="float32")
-	data = np.empty((nb_samples,nb_channels,width,height),dtype="float32")
+	data_tra = np.empty((nb_samples,nb_channels,width,height),dtype="float32")
+	data_pre = np.empty((nb_pre,nb_channels,width,height),dtype="float32")
 	for i in range(nb_samples):
 		for j in range(width):
 			for k in range(height):
-				data[i,0,j,k] = sst[k,99-j,i]+0.0
-				data[i,1,j,k] = t2m[k,99-j,i]
-				data[i,2,j,k] = msl[k,99-j,i]
-				data[i,3,j,k] = u10[k,99-j,i]
-				data[i,4,j,k] = v10[k,99-j,i]
+				data_tra[i,0,j,k] = sst[k,99-j,i]+0.0
+				data_tra[i,1,j,k] = t2m[k,99-j,i]
+				data_tra[i,2,j,k] = msl[k,99-j,i]
+				data_tra[i,3,j,k] = u10[k,99-j,i]
+				data_tra[i,4,j,k] = v10[k,99-j,i]
+	for i in range(nb_pre):
+		for j in range(width):
+			for k in range(height):
+				data_pre[i,0,j,k] = sst[k,99-j,i+nb_samples]+0.0
+				data_pre[i,1,j,k] = t2m[k,99-j,i+nb_samples]
+				data_pre[i,2,j,k] = msl[k,99-j,i+nb_samples]
+				data_pre[i,3,j,k] = u10[k,99-j,i+nb_samples]
+				data_pre[i,4,j,k] = v10[k,99-j,i+nb_samples]
 	#print 'origtion'
 	#print (data[1:5,:,50,50])
 	for i in range(nb_channels):
-		sacle = np.max(data[:,i,:,:])
-		data[:,i,:,:] /= sacle
-		mean = np.std(data[:,i,:,:])
-		data[:,i,:,:] -= mean
+		sacle = np.max(data_tra[:,i,:,:])
+		data_tra[:,i,:,:] /= sacle
+		data_pre[:,i,:,:] /= sacle
+		mean = np.std(data_tra[:,i,:,:])
+		data_tra[:,i,:,:] -= mean
+		data_pre[:,i,:,:] -= mean
 		#print ('sacle',sacle,'mean',mean)
 	
 	#print 'nomalization'
 	#print (data[1:5,:,50,50])
 	#print (data[:,0,:,:])
-	sacle = np.max(label)
-	label /= sacle
-	mean = np.std(label)
-	label -= mean
+	sacle = np.max(label_tra)
+	label_tra /= sacle
+	label_pre /= sacle
+	mean = np.std(label_tra)
+	label_tra -= mean
+	label_pre -= mean
 
-	sacle = np.max(next)
-	next /= sacle
-	mean = np.std(next)
-	next -= mean
+	sacle = np.max(next_tra)
+	next_tra /= sacle
+	next_pre /= sacle
+	mean = np.std(next_tra)
+	next_tra -= mean
+	next_pre -= mean
 
 
-	return data,label,next
+	return data_tra,label_tra,next_tra,data_pre,label_pre,next_pre,sacle,mean
 
 
-data, labeli, next = load_data()
+data_tra,label_tra,next_tra,data_pre,label_pre,next_pre,sacle,mean = load_data()
 
 
 '''

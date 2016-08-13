@@ -27,9 +27,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-images, captions, next_words = load_data()
+images, captions, next_words,images_pre, captions_pre, next_words_pre, scale, mean = load_data()
 
-nb_samples = 384
+nb_samples = 360
 nb_channels = 5
 width = 100
 height = 100
@@ -63,8 +63,12 @@ print ( 'next_words',next_words[1] )
 print ( 'images.shape',images.shape)
 print ( 'captions.shape',captions.shape)
 print ( 'next_words.shape',next_words.shape)
-
-
+print ( 'images_pre.shape',images_pre.shape)
+print ( 'captions_pre.shape',captions_pre.shape)
+print ( 'next_words_pre.shape',next_words_pre.shape)
+print ('scale',scale)
+print ('mean',mean)
+#exit()
 ###############
 #开始建立CNN模型
 ###############
@@ -141,7 +145,42 @@ model.compile(loss='mean_squared_error', optimizer=rmspro)
 model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
 
 print('Predicting')
-predicted_output = model.predict([images[1:5],captions[1:5]],batch_size=batch_size)
+predicted_output = model.predict([images_pre,captions_pre],batch_size=batch_size)
+
+# === 
+next_words_pre += mean 
+next_words_pre *= scale
+predicted_output += mean 
+predicted_output *= scale
+# ===
+f = open("predicted_output.txt",'w')
+f.write(predicted_output)
+f.close()
+f = open("next_word.txt",'w')
+f.write(next_words_pre)
+f.close()
+
+
+print ( 'next_words_pre',next_words_pre )
+print('predicted_lable',predicted_output)
+
+print('Plotting Results')
+plt.subplot(2, 1, 1)
+plt.plot(next_words_pre[1])
+plt.title('Expected1')
+plt.subplot(2, 1, 1)
+plt.plot(predicted_output[1])
+plt.title('Predicted1')
+plt.subplot(2, 1, 2)
+plt.plot(next_words_pre[2])
+plt.title('Expected2')
+plt.subplot(2, 1, 2)
+plt.plot(predicted_output[2])
+plt.title('Predicted2')
+#plt.show()
+plt.savefig('merge33.jpg')
+#plt.savefig('merge2.jpg', dpi = 600)
+''' 
 print ( 'label',next_words[1:5] )
 print('predicted_lable',predicted_output)
 
@@ -160,3 +199,4 @@ plt.plot(predicted_output[2])
 plt.title('Predicted1')
 #plt.show()
 plt.savefig('merge33.jpg', dpi = 600)
+'''
