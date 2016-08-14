@@ -12,19 +12,24 @@ import os
 from PIL import Image
 import numpy as np
 
+'''
+for i in range(5,0,-1):
+	print(i)
+exit()
+'''
 
 def load_data():
 	
 	nb_samples = 360
-	nb_pre = 24
+	nb_pre = 12
 	nb_channels = 5
 	width = 100
 	height = 100
 
-	max_caption_len = 1
+	max_caption_len = 6
 	vocab_size = 12
 
-	# --- lable ---'
+	# --- label ---'
 	txtfn='hko_keras_79-11'
 	hko=np.loadtxt(txtfn,unpack='true')
 
@@ -33,18 +38,20 @@ def load_data():
 	label_pre = np.empty((nb_pre,max_caption_len),dtype="float32")
 
 	for i in range(nb_samples):
-       		label_tra[i] = hko[i] 
+		for j in range(max_caption_len):
+			label_tra[i,j] = hko[i+j]
 	for i in range(nb_pre):
-       		label_pre[i] = hko[nb_samples+i]
+		for j in range(max_caption_len):
+       			label_pre[i,j] = hko[nb_samples+i+j]
  	'''
-	print ( label_tra[1:10])
-	print ( hko[1:10])
-	print ( label_pre[1:10])
-	print ( hko[nb_samples+1:nb_samples+10])
+	print ( label_tra[0:3])
+	print ( hko[0:12])
+	print ( label_pre[0:3])
+	print ( hko[nb_samples:nb_samples+10])
 	print ( label_tra.shape )
 	print ( label_pre)
+	exit()
 	'''
-	#exit()
 	# --- next ---
 	next_tra = np.empty((nb_samples,vocab_size),dtype="float32")
 	next_pre = np.empty((nb_pre,vocab_size),dtype="float32")
@@ -52,10 +59,13 @@ def load_data():
 		for j in range(vocab_size):
 			#k = i+j
 			next_tra[i,j] = hko[i+j]
+			#next_tra[i,j] = hko[i+j+max_caption_len-1]
+			#next_tra[i,j] = hko[i+j+max_caption_len]
 	for i in range(nb_pre):
 		for j in range(vocab_size):
 			#k = i+j
 			next_pre[i,j] = hko[i+j+nb_samples]
+			#next_pre[i,j] = hko[i+j+nb_samples+max_caption_len-1]
 
 	#print ( next[1:10])
 	#print ( next.shape )
@@ -134,7 +144,18 @@ def load_data():
 
 
 data_tra,label_tra,next_tra,data_pre,label_pre,next_pre,sacle,mean = load_data()
+print ( 'data_tra.shape',data_tra.shape )
+print ( 'data_pre',data_pre.shape )
 
+print ( 'label_tra.shape',label_tra.shape )
+print ( 'label_pre',label_pre.shape )
+
+print ( 'next_tra',next_tra.shape )
+print ( 'next_pre',next_pre.shape )
+
+f = open("test.txt",'w')
+f.write(str(label_tra))
+f.close()
 
 '''
 # === 0-1 ===

@@ -34,7 +34,7 @@ nb_channels = 5
 width = 100
 height = 100
 
-max_caption_len = 1
+max_caption_len = 6
 vocab_size = 12
 
 batch_size = 6
@@ -117,8 +117,8 @@ image_model.add(Dense(128))
 # into sequences of 128-dimensional word vectors.
 language_model = Sequential()
 language_model.add(Embedding(vocab_size, 256, input_length=max_caption_len))
-#language_model.add(LSTM(output_dim=128, return_sequences=True))
-language_model.add(GRU(output_dim=128, return_sequences=True))
+language_model.add(LSTM(output_dim=128, return_sequences=True))
+#language_model.add(GRU(output_dim=128, return_sequences=True))
 language_model.add(TimeDistributed(Dense(128)))
 #language_model.add(TimeDistributedDense(128))
 
@@ -154,10 +154,10 @@ predicted_output += mean
 predicted_output *= scale
 # ===
 f = open("predicted_output.txt",'w')
-f.write(predicted_output)
+f.write(str(predicted_output))
 f.close()
 f = open("next_word.txt",'w')
-f.write(next_words_pre)
+f.write(str(next_words_pre))
 f.close()
 
 
@@ -172,10 +172,10 @@ plt.subplot(2, 1, 1)
 plt.plot(predicted_output[1])
 plt.title('Predicted1')
 plt.subplot(2, 1, 2)
-plt.plot(next_words_pre[2])
+plt.plot(next_words_pre[6])
 plt.title('Expected2')
 plt.subplot(2, 1, 2)
-plt.plot(predicted_output[2])
+plt.plot(predicted_output[6])
 plt.title('Predicted2')
 #plt.show()
 plt.savefig('merge33.jpg')
