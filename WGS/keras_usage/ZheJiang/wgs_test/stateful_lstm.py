@@ -5,13 +5,14 @@ from __future__ import print_function
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Dense, LSTM
+from keras.layers.core import Dense
+from keras.layers.recurrent import LSTM
 
 
 # since we are using stateful rnn tsteps can be set to 1
 tsteps = 1
-batch_size = 25 
-epochs = 3
+batch_size = 25
+epochs = 25
 # number of elements ahead that are used to make the prediction
 lahead = 1
 
@@ -29,9 +30,6 @@ def gen_cosine_amp(amp=100, period=25, x0=0, xn=50000, step=1, k=0.0001):
         k: exponential rate
     """
     cos = np.zeros(((xn - x0) * step, 1, 1))
-    print ( 'len(cos) ',len(cos) )
-    #print(np.cos(2),np.pi)
-    #exit()
     for i in range(len(cos)):
         idx = x0 + i * step
         cos[i, 0, 0] = amp * np.cos(idx / (2 * np.pi * period))
@@ -41,10 +39,7 @@ def gen_cosine_amp(amp=100, period=25, x0=0, xn=50000, step=1, k=0.0001):
 
 print('Generating Data')
 cos = gen_cosine_amp()
-print('Input shape:')
-print( cos.shape)
-print('Input ')
-print(cos[1:4])
+print('Input shape:', cos.shape)
 
 expected_output = np.zeros((len(cos), 1))
 for i in range(len(cos) - lahead):
@@ -52,8 +47,7 @@ for i in range(len(cos) - lahead):
 
 print('Output shape')
 print(expected_output.shape)
-print('expected_output')
-print(expected_output[1:10])
+
 print('Creating Model')
 model = Sequential()
 model.add(LSTM(50,
@@ -80,7 +74,7 @@ for i in range(epochs):
 
 print('Predicting')
 predicted_output = model.predict(cos, batch_size=batch_size)
-print('predicted_output',predicted_output)
+
 print('Ploting Results')
 plt.subplot(2, 1, 1)
 plt.plot(expected_output)
@@ -88,6 +82,4 @@ plt.title('Expected')
 plt.subplot(2, 1, 2)
 plt.plot(predicted_output)
 plt.title('Predicted')
-plt.savefig('stateful_lstm.jpg')
-#plt.savefig("matplot_sample.jpg")
-#plt.show()
+plt.show()

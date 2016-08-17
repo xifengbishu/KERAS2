@@ -19,7 +19,11 @@ exit()
 '''
 
 def load_data():
-	
+	# --- hko_keras_79.01-11.12 ( 396 )	
+	# --- era_keras_79.01-13.12 ( 420 )	
+	# --- train 80.01-10.12 (13:372,360)
+	# --- test  11.01-11.12 (373:396,12)
+
 	nb_samples = 360
 	nb_pre = 12
 	nb_channels = 5
@@ -39,35 +43,44 @@ def load_data():
 
 	for i in range(nb_samples):
 		for j in range(max_caption_len):
-			label_tra[i,j] = hko[i+j]
+			label_tra[i,j] = hko[i+j+max_caption_len]
 	for i in range(nb_pre):
 		for j in range(max_caption_len):
-       			label_pre[i,j] = hko[nb_samples+i+j]
+       			label_pre[i,j] = hko[nb_samples+i+j+max_caption_len]
+	'''
 	print ( 'hko',hko[0:18] )
 	print ( 'label_tra',label_tra[0:3])
-	print ( 'hko_pre',hko[nb_samples:nb_samples+10])
+	print ( 'hko_pre',hko[nb_samples+max_caption_len:nb_samples+max_caption_len+24])
 	print ( 'label_pre',label_pre[0:3])
 	print ( label_tra.shape )
-	exit()
+	'''
+	#exit()
 	# --- next ---
 	next_tra = np.empty((nb_samples,vocab_size),dtype="float32")
 	next_pre = np.empty((nb_pre,vocab_size),dtype="float32")
 	for i in range(nb_samples):
 		for j in range(vocab_size):
 			#k = i+j
-			next_tra[i,j] = hko[i+j]
+			next_tra[i,j] = hko[i+j+12]
 			#next_tra[i,j] = hko[i+j+max_caption_len-1]
 			#next_tra[i,j] = hko[i+j+max_caption_len]
 	for i in range(nb_pre):
 		for j in range(vocab_size):
 			#k = i+j
-			next_pre[i,j] = hko[i+j+nb_samples]
+			next_pre[i,j] = hko[i+j+nb_samples+12]
 			#next_pre[i,j] = hko[i+j+nb_samples+max_caption_len-1]
-
+	'''
+	print ( 'hko',hko[0:18] )
+	print ( 'next_tra',next_tra[0:3])
+	print ( 'hko_pre',hko[nb_samples+12:nb_samples+36])
+	print ( 'next_pre',next_pre[0:3])
+	print ( label_tra.shape )
+	'''
+	#exit()
 	#print ( next[1:10])
 	#print ( next.shape )
 	# --- input cnn --- read matlab dat   
-	# --- ERA 1979-2015? 
+	# --- ERA 197901-201312 
 	matfn='alldata.mat'  
 	mat=sio.loadmat(matfn)  
 	#print type(mat)
@@ -95,19 +108,19 @@ def load_data():
 	for i in range(nb_samples):
 		for j in range(width):
 			for k in range(height):
-				data_tra[i,0,j,k] = sst[k,99-j,i]+0.0
-				data_tra[i,1,j,k] = t2m[k,99-j,i]
-				data_tra[i,2,j,k] = msl[k,99-j,i]
-				data_tra[i,3,j,k] = u10[k,99-j,i]
-				data_tra[i,4,j,k] = v10[k,99-j,i]
+				data_tra[i,0,j,k] = sst[k,99-j,i+12]
+				data_tra[i,1,j,k] = t2m[k,99-j,i+12]
+				data_tra[i,2,j,k] = msl[k,99-j,i+12]
+				data_tra[i,3,j,k] = u10[k,99-j,i+12]
+				data_tra[i,4,j,k] = v10[k,99-j,i+12]
 	for i in range(nb_pre):
 		for j in range(width):
 			for k in range(height):
-				data_pre[i,0,j,k] = sst[k,99-j,i+nb_samples]+0.0
-				data_pre[i,1,j,k] = t2m[k,99-j,i+nb_samples]
-				data_pre[i,2,j,k] = msl[k,99-j,i+nb_samples]
-				data_pre[i,3,j,k] = u10[k,99-j,i+nb_samples]
-				data_pre[i,4,j,k] = v10[k,99-j,i+nb_samples]
+				data_pre[i,0,j,k] = sst[k,99-j,i+nb_samples+12]
+				data_pre[i,1,j,k] = t2m[k,99-j,i+nb_samples+12]
+				data_pre[i,2,j,k] = msl[k,99-j,i+nb_samples+12]
+				data_pre[i,3,j,k] = u10[k,99-j,i+nb_samples+12]
+				data_pre[i,4,j,k] = v10[k,99-j,i+nb_samples+12]
 	#print 'origtion'
 	#print (data[1:5,:,50,50])
 	for i in range(nb_channels):
