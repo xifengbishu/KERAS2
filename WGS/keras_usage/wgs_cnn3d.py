@@ -104,13 +104,12 @@ model.add(Dropout(0.25))
 #扁平化
 model.add(Flatten())
 
-#"""
+"""
 #全连接层
 model.add(Dense(1024))
 #model.add(Dense(1024, init='normal'))
 model.add(Activation('relu'))
 model.add(Dropout(0.25))
-#"""
 
 #Softmax分类，输出是2类别
 model.add(Dense(1))
@@ -118,6 +117,7 @@ model.add(Activation('relu'))
 model.compile(loss='mse', optimizer='rmsprop')
 
 model.add(Dense(1, activation='relu'))
+"""
 
 #############
 #开始训练模型

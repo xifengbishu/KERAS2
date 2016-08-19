@@ -26,7 +26,7 @@ def load_data():
 	width = 100
 	height = 100
 
-	max_caption_len = 6
+	max_caption_len = 1
 	vocab_size = 12
 
 	# --- label ---'
@@ -43,12 +43,14 @@ def load_data():
 	for i in range(nb_pre):
 		for j in range(max_caption_len):
        			label_pre[i,j] = hko[nb_samples+i+j]
+	'''
 	print ( 'hko',hko[0:18] )
 	print ( 'label_tra',label_tra[0:3])
 	print ( 'hko_pre',hko[nb_samples:nb_samples+10])
 	print ( 'label_pre',label_pre[0:3])
 	print ( label_tra.shape )
 	exit()
+	'''
 	# --- next ---
 	next_tra = np.empty((nb_samples,vocab_size),dtype="float32")
 	next_pre = np.empty((nb_pre,vocab_size),dtype="float32")

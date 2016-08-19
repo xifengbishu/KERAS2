@@ -34,10 +34,10 @@ nb_channels = 5
 width = 100
 height = 100
 
-max_caption_len = 6
+max_caption_len = 1
 vocab_size = 12
 
-batch_size = 6
+batch_size = 2
 nb_epoch = 10
 
 # "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
