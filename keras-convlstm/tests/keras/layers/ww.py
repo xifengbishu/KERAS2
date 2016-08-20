@@ -14,3 +14,4 @@ seq.add(Convolution3D(nb_filter=1, kernel_dim1=1, kernel_dim2=3,
                    border_mode="same", dim_ordering="tf"))
 
 seq.compile(loss="binary_crossentropy",optimizer="adadelta")
+seq.fit(X_train, Y_train, batch_size=32, verbose=1)
