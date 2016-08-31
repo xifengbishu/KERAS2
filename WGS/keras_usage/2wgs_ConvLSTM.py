@@ -8,15 +8,15 @@
 '''
 #导入各种用到的模块组件
 
+from __future__ import absolute_import
+from __future__ import print_function
 from keras.models import Sequential,Graph
 from keras.layers.convolutional import Convolution2D,Convolution3D
 from keras.layers.recurrent_convolutional import LSTMConv2D
 
-from __future__ import absolute_import
-from __future__ import print_function
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
-from keras.layers import TimeDistributed
+#from keras.layers import TimeDistributed
 from keras.layers.core import Dense, Dropout, Activation, Flatten, TimeDistributedDense, RepeatVector
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
@@ -42,9 +42,9 @@ import matplotlib.pyplot as plt
 #     参数设置 
 ######################################
 nb_samples = 360
-nb_channels = 5
-width = 100
-height = 100
+nb_channels = 1
+width = 40
+height = 40
 
 max_caption_len = 1
 vocab_size = 12
@@ -59,8 +59,8 @@ nb_epoch = 10
 # containing a categorical encoding (0s and 1s) of the next word in the corresponding
 # partial caption.
 
-images_input = np.random.random((nb_samples,nb_channels,width,height))
-images_ouput = np.random.random((nb_samples,nb_channels,width,height))
+images_input = np.random.random((nb_samples,5,nb_channels,width,height))
+images_ouput = np.random.random((nb_samples,5,nb_channels,width,height))
 #captions = np.random.random((nb_samples,max_caption_len))
 #next_words = np.random.random ((nb_samples,vocab_size))
 '''
@@ -95,8 +95,12 @@ print ('label shape',label.shape)
 #开始建立CNN模型
 ###############
 
+# ----
+# Theano模式会把100张RGB三通道的16×32（高为16宽为32）彩色图表示为下面这种形式（100,3,16,32）
+# 而TensorFlow，即'tf'模式的表达形式是（100,16,32,3），即把通道维放在了最后
+
 seq = Sequential()
-seq.add(LSTMConv2D(nb_filter=15, nb_row=3, nb_col=3, input_shape=(10,40,40,1),
+seq.add(LSTMConv2D(nb_filter=15, nb_row=3, nb_col=3, input_shape=(5,40,40,1),
                    border_mode="same",return_sequences=True))
 seq.add(LSTMConv2D(nb_filter=15,nb_row=3, nb_col=3,
                    border_mode="same", return_sequences=True))
@@ -107,12 +111,12 @@ seq.add(Convolution3D(nb_filter=1, kernel_dim1=1, kernel_dim2=3,
                    border_mode="same", dim_ordering="tf"))
 
 seq.compile(loss="binary_crossentropy",optimizer="adadelta")
-seq.fit(X_train, Y_train, batch_size=32, verbose=1)
+seq.fit(images_input, images_ouput, batch_size=32, verbose=1)
 # === predict ===
-predict = model.predict(data[1:10], batch_size=batch_size, verbose=0)
-print( 'predict' )
-print( predict )
-print ('label',label[1:10])
+#predict = model.predict(data[1:10], batch_size=batch_size, verbose=0)
+#print( 'predict' )
+#print( predict )
+#print ('label',label[1:10])
 ###########
 # Save
 ###########
