@@ -11,7 +11,19 @@ import numpy as np
 import os
 from PIL import Image
 import numpy as np
-
+import time
+'''
+now_timeStamp=int(time.time())
+timeArray = time.localtime(now_timeStamp)
+otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S",timeArray)
+print ( time.time() )
+print ( now_timeStamp )
+print ( otherStyleTime )
+print type(otherStyleTime)
+print ( 'merge2_'+otherStyleTime+'.jpg')
+os.rename('merge2.jpg','merge2_'+otherStyleTime+'.jpg')
+exit()
+'''
 '''
 for i in range(5,0,-1):
 	print(i)
@@ -141,7 +153,7 @@ def load_data():
 
 	return data_tra,label_tra,next_tra,data_pre,label_pre,next_pre,sacle,mean
 
-
+'''
 data_tra,label_tra,next_tra,data_pre,label_pre,next_pre,sacle,mean = load_data()
 print ( 'data_tra.shape',data_tra.shape )
 print ( 'data_pre',data_pre.shape )
@@ -151,7 +163,7 @@ print ( 'label_pre',label_pre.shape )
 
 print ( 'next_tra',next_tra.shape )
 print ( 'next_pre',next_pre.shape )
-
+'''
 
 '''
 f = open("test.txt",'w')

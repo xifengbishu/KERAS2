@@ -25,6 +25,7 @@ from data3 import load_data
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 
 images, captions, next_words,images_pre, captions_pre, next_words_pre, scale, mean = load_data()
@@ -34,7 +35,7 @@ nb_channels = 5
 width = 100
 height = 100
 
-max_caption_len = 1
+max_caption_len = 6
 vocab_size = 12
 
 batch_size = 2
@@ -110,8 +111,6 @@ image_model.add(MaxPooling2D(pool_size=(2, 2)))
 image_model.add(Flatten())
 image_model.add(Dense(128))
 
-# let's load the weights from a save file.
-#image_model.load_weights('weight_file.h5')
 
 # next, let's define a RNN model that encodes sequences of words
 # into sequences of 128-dimensional word vectors.
@@ -137,12 +136,16 @@ model.add(GRU(256, return_sequences=False))
 model.add(Dense(vocab_size))
 model.add(Activation('relu'))
 
+# let's load the weights from a save file.
+model.load_weights('wgs_merge33_20160905_122053.h5')
+
 sgd = SGD(lr=0.05, decay=1e-6, momentum=0.9, nesterov=True)
 rmspro = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08)
 model.compile(loss='mean_squared_error', optimizer=rmspro)
 
 #model.fit(data, label, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
-model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
+#model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
+
 
 print('Predicting')
 predicted_output = model.predict([images_pre,captions_pre],batch_size=batch_size)
@@ -165,21 +168,44 @@ print ( 'next_words_pre',next_words_pre )
 print('predicted_lable',predicted_output)
 
 print('Plotting Results')
-plt.subplot(2, 1, 1)
-plt.plot(next_words_pre[1])
-plt.title('Expected1')
-plt.subplot(2, 1, 1)
+plt.subplot(2, 2, 1)
+plt.plot(next_words_pre[1],'k')
+plt.subplot(2, 2, 1)
 plt.plot(predicted_output[1])
 plt.title('Predicted1')
-plt.subplot(2, 1, 2)
-plt.plot(next_words_pre[6])
-plt.title('Expected2')
-plt.subplot(2, 1, 2)
+
+plt.subplot(2, 2, 2)
+plt.plot(next_words_pre[6],'k')
+plt.subplot(2, 2, 2)
 plt.plot(predicted_output[6])
+plt.title('Predicted6')
+
+plt.subplot(2, 2, 3)
+plt.plot(next_words_pre[2],'k')
+plt.subplot(2, 2, 3)
+plt.plot(predicted_output[2])
 plt.title('Predicted2')
+
+plt.subplot(2, 2, 4)
+plt.plot(next_words_pre[4],'k')
+plt.subplot(2, 2, 4)
+plt.plot(predicted_output[4])
+plt.title('Predicted4')
 #plt.show()
-plt.savefig('merge33.jpg')
+plt.savefig('merge33-.jpg')
 #plt.savefig('merge2.jpg', dpi = 600)
+
+
+###########
+# Save
+###########
+now_timeStamp=int(time.time())
+timeArray = time.localtime(now_timeStamp)
+otherStyleTime = time.strftime("%Y%m%d_%H%M%S",timeArray)
+print ( otherStyleTime )
+model.save_weights('wgs_merge33_'+otherStyleTime+'.h5',overwrite=True)
+
+
 ''' 
 print ( 'label',next_words[1:5] )
 print('predicted_lable',predicted_output)
