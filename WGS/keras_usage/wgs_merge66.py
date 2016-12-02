@@ -39,7 +39,7 @@ max_caption_len = 6
 vocab_size = 12
 
 batch_size = 6
-nb_epoch = 20
+nb_epoch = 10
 
 # "images" is a numpy float array of shape (nb_samples, nb_channels=3, width, height).
 # "captions" is a numpy integer array of shape (nb_samples, max_caption_len)
@@ -155,14 +155,14 @@ model.add(Dense(vocab_size))
 model.add(Activation('relu'))
 
 # let's load the weights from a save file.
-#model.load_weights('wgs_merge66_20160905_122053.h5')
+model.load_weights('wgs_merge66_20161201_170819.h5')
 
 sgd = SGD(lr=0.05, decay=1e-6, momentum=0.9, nesterov=True)
 rmspro = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08)
 model.compile(loss='mean_squared_error', optimizer=rmspro)
 
 #model.fit(data, label, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
-model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.2)
+#model.fit([images,captions], next_words, batch_size=batch_size, nb_epoch=nb_epoch,shuffle=True,verbose=1,validation_split=0.1)
 
 
 print('Predicting')
@@ -213,7 +213,7 @@ plt.title('Predicted4')
 plt.savefig('merge66.jpg')
 #plt.savefig('merge2.jpg', dpi = 600)
 
-
+'''
 ###########
 # Save
 ###########
@@ -222,7 +222,7 @@ timeArray = time.localtime(now_timeStamp)
 otherStyleTime = time.strftime("%Y%m%d_%H%M%S",timeArray)
 print ( otherStyleTime )
 model.save_weights('wgs_merge66_'+otherStyleTime+'.h5',overwrite=True)
-
+'''
 
 ''' 
 print ( 'label',next_words[1:5] )
